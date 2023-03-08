@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Account {
     private int accountId;
-    private User owner;
+    private int owner;
     private BigDecimal balance;
     List<Transfer> transfers;
 
@@ -17,11 +17,11 @@ public class Account {
         this.accountId = accountId;
     }
 
-    public User getOwner() {
+    public int getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(int owner) {
         this.owner = owner;
     }
 
