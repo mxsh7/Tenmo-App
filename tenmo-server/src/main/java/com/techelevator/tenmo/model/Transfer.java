@@ -33,7 +33,7 @@ public class Transfer {
         this.amount = amount;
     }
 
-    public int isType() {
+    public int getType() {
         return type;
     }
 

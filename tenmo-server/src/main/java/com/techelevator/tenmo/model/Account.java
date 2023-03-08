@@ -1,8 +1,6 @@
 package com.techelevator.tenmo.model;
 
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,12 +22,12 @@ public class Account {
         this.accountId = accountId;
     }
 
-    public int getOwner() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setOwner(int owner) {
-        this.userId = owner;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public BigDecimal getBalance() {

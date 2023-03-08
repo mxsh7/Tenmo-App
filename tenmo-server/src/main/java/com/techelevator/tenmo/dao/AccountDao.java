@@ -17,7 +17,7 @@ public interface AccountDao {
 
     public Account getCurrentUserAccount(Principal principal);
 
-    public List<Transfer> getTransfers(int accountId);
+    public List<Transfer> getTransfers(Account account);
 
     public Transfer createTransfer(int transferTypeId, int transferStatusId, int accountFrom, int accountTo, BigDecimal amount);
 

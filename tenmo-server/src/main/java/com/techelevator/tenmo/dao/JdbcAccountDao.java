@@ -89,13 +89,13 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public List<Transfer> getTransfers(int accountId) {
+    public List<Transfer> getTransfers(Account account) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount\n" +
                 "\tFROM public.transfer;\n" +
                 "\tWHERE account_from = ? OR account_to = ?";
 
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId, accountId);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, account.getAccountId(), account.getAccountId());
         while(results.next()) {
             Transfer transfer = mapTransfer(results);
             transfers.add(transfer);
@@ -118,7 +118,7 @@ public class JdbcAccountDao implements AccountDao {
     private Account mapAccount(SqlRowSet results){
         Account account = new Account();
         account.setAccountId(results.getInt("account_id"));
-        account.setOwner(results.getInt("user_id"));
+        account.setUserId(results.getInt("user_id"));
         account.setBalance(results.getBigDecimal("balance"));
         return account;
     }
