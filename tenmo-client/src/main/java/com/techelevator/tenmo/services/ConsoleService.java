@@ -47,7 +47,7 @@ public class ConsoleService {
     }
 
     public UserCredentials promptForCredentials() {
-        String username = promptForString("Username: ");
+        String username = promptForString("Username: ").toLowerCase();
         String password = promptForString("Password: ");
         return new UserCredentials(username, password);
     }

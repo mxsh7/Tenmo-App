@@ -5,16 +5,17 @@ import java.math.BigDecimal;
 public class Transfer {
     private int transferId;
     private BigDecimal amount;
-    private boolean type;
+    private int type;
     private int status;
-    private Account otherAccount;
+    private int fromAccount;
+    private int toAccount;
 
-    final static boolean SEND = true;
-    final static boolean REQUEST = false;
+    final static int REQUEST = 1;
+    final static int SEND = 2;
 
-    final static int PENDING = 0;
-    final static int APPROVED = 1;
-    final static int REJECTED = 2;
+    final static int PENDING = 1;
+    final static int APPROVED = 2;
+    final static int REJECTED = 3;
 
     public int getTransferId() {
         return transferId;
@@ -32,11 +33,11 @@ public class Transfer {
         this.amount = amount;
     }
 
-    public boolean isType() {
+    public int isType() {
         return type;
     }
 
-    public void setType(boolean type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -48,11 +49,19 @@ public class Transfer {
         this.status = status;
     }
 
-    public Account getOtherAccount() {
-        return otherAccount;
+    public int getFromAccount() {
+        return fromAccount;
     }
 
-    public void setOtherAccount(Account otherAccount) {
-        this.otherAccount = otherAccount;
+    public void setFromAccount(int fromAccount) {
+        this.fromAccount = fromAccount;
+    }
+
+    public int getToAccount() {
+        return toAccount;
+    }
+
+    public void setToAccount(int toAccount) {
+        this.toAccount = toAccount;
     }
 }

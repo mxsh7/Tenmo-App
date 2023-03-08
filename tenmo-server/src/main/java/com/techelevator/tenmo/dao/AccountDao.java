@@ -3,6 +3,8 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 
+import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 public interface AccountDao {
@@ -13,26 +15,10 @@ public interface AccountDao {
 
     public Account getAccountByUserId(int userId);
 
-    public Account getCurrentUserAccount();
+    public Account getCurrentUserAccount(Principal principal);
 
-    public Transfer getTransfers(int accountId);
+    public List<Transfer> getTransfers(int accountId);
 
-    public Transfer createTransfers(int accountId);
+    public Transfer createTransfer(int transferTypeId, int transferStatusId, int accountFrom, int accountTo, BigDecimal amount);
 
-
-
-
-
-
-
-
-
-    /*
-
-
-    getAccountBalance(accountId)
-    getTransfers()
-    getTransfersByAccount()
-    createTransfer(transferType)
-     */
 }
