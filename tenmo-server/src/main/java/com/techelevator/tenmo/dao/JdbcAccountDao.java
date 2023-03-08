@@ -92,8 +92,8 @@ public class JdbcAccountDao implements AccountDao {
     public List<Transfer> getTransfers(Account account) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount\n" +
-                "\tFROM public.transfer;\n" +
-                "\tWHERE account_from = ? OR account_to = ?";
+                "\tFROM public.transfer\n" +
+                "\tWHERE account_from = ? OR account_to = ?;";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, account.getAccountId(), account.getAccountId());
         while(results.next()) {
@@ -111,8 +111,15 @@ public class JdbcAccountDao implements AccountDao {
         String sql = "INSERT INTO public.transfer(\n" +
                 "\ttransfer_type_id, transfer_status_id, account_from, account_to, amount)\n" +
                 "\tVALUES (?, ?, ?, ?, ?) RETURNING transfer_id;";
-
-        return jdbcTemplate.queryForObject(sql, Transfer.class, transferTypeId, transferStatusId, accountFrom, accountTo, amount);
+        Integer newTransferId = jdbcTemplate.queryForObject(sql, Integer.class, transferTypeId, transferStatusId, accountFrom, accountTo, amount);
+        Transfer transfer = new Transfer();
+        transfer.setTransferId(newTransferId);
+        transfer.setStatus(transferStatusId);
+        transfer.setType(transferStatusId);
+        transfer.setFromAccount(accountFrom);
+        transfer.setToAccount(accountTo);
+        transfer.setAmount(amount);
+        return transfer;
     }
 
     private Account mapAccount(SqlRowSet results){

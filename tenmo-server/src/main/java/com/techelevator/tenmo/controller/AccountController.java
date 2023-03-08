@@ -14,7 +14,6 @@ import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
 @RestController
-@RequestMapping("/account")
 public class AccountController {
 
     private final AccountDao dao;
@@ -23,7 +22,7 @@ public class AccountController {
         this.dao = dao;
     }
 
-    @RequestMapping(path = "", method = RequestMethod.GET)
+    @RequestMapping(path = "/account", method = RequestMethod.GET)
     public List<Account> listAccounts() {
         return dao.getAllAccounts();
     }
