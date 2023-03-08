@@ -1,11 +1,18 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class Account {
+    @NotEmpty
     private int accountId;
-    private int owner;
+    @NotEmpty
+    private int userId;
+    @PositiveOrZero
     private BigDecimal balance;
     List<Transfer> transfers;
 
@@ -18,11 +25,11 @@ public class Account {
     }
 
     public int getOwner() {
-        return owner;
+        return userId;
     }
 
     public void setOwner(int owner) {
-        this.owner = owner;
+        this.userId = owner;
     }
 
     public BigDecimal getBalance() {
