@@ -1,11 +1,14 @@
 package com.techelevator.tenmo;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+
+import java.math.BigDecimal;
 
 public class App {
 
@@ -111,15 +114,36 @@ public class App {
             System.out.println(transfer.getTransferId() + "    " + type + " " + otherAccountUsername + "   $" + transfer.getAmount());
         }
         System.out.println("-------------------------------------------");
+
+
 	}
 
     private void viewPendingRequests() {
-		// TODO Auto-generated method stub
+        Transfer[] transfers = accountService.getTransfers();
+        System.out.println("-------------------------------------------");
+        System.out.println("Pending Transfers");
+        System.out.println("ID      To      Amount");
+        for (int i = 0; i < transfers.length; i++) {
+            Transfer transfer = transfers[i];
+            if(transfer.getStatus() == 1) {
+                String type = "";
+                String otherAccountUsername = "";
+
+                    type = "To:  ";
+                    otherAccountUsername = transfer.getToUsername();
+                System.out.println(transfer.getTransferId() + "    " + type + " " + otherAccountUsername + "   $" + transfer.getAmount());
+            }
+        }
+        System.out.println("-------------------------------------------");
 		
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
+        Account[] accounts = accountService.getAllAccounts();
+        System.out.println(accounts);
+        int userId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel)");
+        BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter Amount");
+
 		
 	}
 

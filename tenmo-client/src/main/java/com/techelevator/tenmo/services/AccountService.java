@@ -27,6 +27,20 @@ public class AccountService {
     }
 
 
+    public Account[] getAllAccounts() {
+        Account[] accounts = null;
+        try {
+            ResponseEntity<Account[]> response =
+                    restTemplate.exchange(API_BASE_URL, HttpMethod.GET, makeAuthEntity(), Account[].class);
+            accounts = response.getBody();
+
+        }catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return accounts;
+
+    }
+
     public BigDecimal getBalance(){
 
         Account account = null;
@@ -52,6 +66,34 @@ public class AccountService {
         return transfers;
     }
 
+//    public BigDecimal sendBucks(BigDecimal amountToSend){
+//
+//        BigDecimal balance = getBalance();
+//        int res =(balance.compareTo(amountToSend));
+//        String str1 = "Both values are equal ";
+//        String str2 = "Balance Value is greater ";
+//        String str3 = "Amount to send value is greater";
+//
+//        if( res == 0 || res == 1  ) {
+//
+//            System.out.println("transfer is successful");
+//        }
+//        else {
+//            System.out.println( "Insufficient balance" );
+//        }
+//
+//
+//    }
+
+
+
+        // while balance > 0
+        // senders amount to send = 0
+        // then sender balance = balance - amount
+        //receivers balance = balance + amount
+
+//
+//    }
 
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
