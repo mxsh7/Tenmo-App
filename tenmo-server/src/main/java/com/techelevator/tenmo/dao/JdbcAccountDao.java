@@ -46,13 +46,10 @@ public class JdbcAccountDao implements AccountDao {
         String sql = "SELECT account_id, user_id, balance\n" +
                 "\tFROM public.account\n" +
                 "\tWHERE account_id = ?;";
-
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
         if (results.next()) {
             account = mapAccount(results);
-
         }
-
         return account;
     }
 
@@ -62,13 +59,10 @@ public class JdbcAccountDao implements AccountDao {
         String sql = "SELECT account_id, user_id, balance\n" +
                 "\tFROM public.account\n" +
                 "\tWHERE user_id = ?;";
-
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         if (results.next()) {
             account = mapAccount(results);
-
         }
-
         return account;
     }
 
@@ -111,20 +105,35 @@ public class JdbcAccountDao implements AccountDao {
 
 
     @Override
-//    public Transfer create(Transfer transfer) {
-//        transfer.setTransferId(getMaxIdPlusOne());
-//        auctions.add(auction);
-//        return transfer;
-//    }
-    public void createTransfer(Transfer transfer) {
+    public boolean createTransfer(Transfer transfer) {
+        boolean completeTransfer = false;
+        try {
+            String sql = "INSERT INTO public.transfer(\n" +
+                    "\ttransfer_type_id, transfer_status_id, account_from, account_to, amount)\n" +
+                    "\tVALUES (?, ?, ?, ?, ?) RETURNING transfer_id;";
+             jdbcTemplate.queryForObject(sql, Integer.class, transfer.getType(), transfer.getStatus(),
+                    transfer.getFromAccount(), transfer.getToAccount(), transfer.getAmount());
+             completeTransfer = true;
+        }catch (Exception e){
 
-        String sql = "INSERT INTO public.transfer(\n" +
-                "\ttransfer_type_id, transfer_status_id, account_from, account_to, amount)\n" +
-                "\tVALUES (?, ?, ?, ?, ?) RETURNING transfer_id;";
-        jdbcTemplate.queryForObject(sql, Integer.class, transfer.getType(), transfer.getStatus(),
-                transfer.getFromAccount(), transfer.getToAccount(), transfer.getAmount());
+        }return completeTransfer;
+
     }
 
+    @Override
+    public boolean updateAccount(Account account){
+        boolean update = false;
+        try{
+            String sql = "UPDATE public.account\n" +
+                    "\tSET account_id=?, user_id=?, balance=?\n" +
+                    "\tWHERE account_id = ?;";
+            jdbcTemplate.update(sql, account.getAccountId(), account.getUserId(),account.getBalance(), account.getAccountId());
+        update = true;
+        }catch (Exception e){
+
+        }
+        return update;
+    }
 
 
     private Account mapAccount(SqlRowSet results){

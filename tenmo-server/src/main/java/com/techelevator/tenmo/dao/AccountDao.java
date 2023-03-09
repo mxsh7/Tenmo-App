@@ -19,6 +19,8 @@ public interface AccountDao {
 
     public List<Transfer> getTransfers(Account account);
 
-    public void createTransfer(Transfer transfer);
+    public boolean createTransfer(Transfer transfer);
+
+    public boolean updateAccount(Account account);
 
 }

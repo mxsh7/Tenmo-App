@@ -149,7 +149,7 @@ public class App {
         }
         System.out.println("-------------------------------------------");
         // TODO Include User Name In Account Object
-        int userId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel)");
+        int userId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel):  ");
         int accountId = 0;
         for (int i = 0; i < accounts.length; i++) {
             Account account = accounts[i];
@@ -157,7 +157,9 @@ public class App {
                 accountId = account.getAccountId();
             }
         }
-        BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter Amount");
+        System.out.println("$$$$$$$$$$$$$$$$$$$$");
+        BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter Amount:  ");
+        System.out.println("$$$$$$$$$$$$$$$$$$$$");
         accountService.sendBucks(currentUser.getUser().getUsername(), accountId, amountToSend);
 	}
 

@@ -41,14 +41,25 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/myaccount/transfers", method = RequestMethod.POST)
     public void createTransfer(@Valid @RequestBody Transfer transfer, Principal principal) {
-
+            boolean completeTransfer = false;
         Account userAccount = dao.getCurrentUserAccount(principal);
+        Account transferReceiver = dao.getAccountByAccountId(transfer.getToAccount());
 
         transfer.setStatus(2);
         transfer.setFromAccount(userAccount.getAccountId());
+
         // TODO Validate transfer
-        dao.createTransfer(transfer);
+        completeTransfer = dao.createTransfer(transfer);
+        if(completeTransfer == true){
+            userAccount.setBalance(userAccount.getBalance().subtract(transfer.getAmount()));
+            dao.updateAccount(userAccount);
+            transferReceiver.setBalance(transferReceiver.getBalance().add(transfer.getAmount()));
+            dao.updateAccount(transferReceiver);
+
+        }
+
         // TODO Update Balances
+
     }
 
 
