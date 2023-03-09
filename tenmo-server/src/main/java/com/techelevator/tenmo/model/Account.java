@@ -12,7 +12,7 @@ public class Account {
     private int userId;
     @PositiveOrZero
     private BigDecimal balance;
-    List<Transfer> transfers;
+    private String username;
 
     public int getAccountId() {
         return accountId;
@@ -38,11 +38,11 @@ public class Account {
         this.balance = balance;
     }
 
-    public List<Transfer> getTransfers() {
-        return transfers;
+    public String getUsername() {
+        return username;
     }
 
-    public void setTransfers(List<Transfer> transfers) {
-        this.transfers = transfers;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

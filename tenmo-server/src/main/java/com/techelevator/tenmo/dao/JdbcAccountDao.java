@@ -34,6 +34,7 @@ public class JdbcAccountDao implements AccountDao {
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
         while(results.next()) {
             Account account = mapAccount(results);
+            account.setUsername(getAccountUsername(account.getAccountId()));
             accounts.add(account);
         }
 
@@ -49,6 +50,7 @@ public class JdbcAccountDao implements AccountDao {
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
         if (results.next()) {
             account = mapAccount(results);
+            account.setUsername(getAccountUsername(accountId));
         }
         return account;
     }
@@ -62,6 +64,7 @@ public class JdbcAccountDao implements AccountDao {
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         if (results.next()) {
             account = mapAccount(results);
+            account.setUsername(getAccountUsername(account.getAccountId()));
         }
         return account;
     }
@@ -77,9 +80,24 @@ public class JdbcAccountDao implements AccountDao {
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId.getId());
         if (results.next()) {
             account = mapAccount(results);
+            account.setUsername(getAccountUsername(account.getAccountId()));
         }
 
         return account;
+    }
+
+    @Override
+    public String getAccountUsername(int accountId) {
+        Account account = null;
+        String sql = "SELECT username\n" +
+                "FROM account\n" +
+                "JOIN tenmo_user ON tenmo_user.user_id = account.user_id\n" +
+                "WHERE account_id = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
+        if (results.next()) {
+            return results.getString("username");
+        }
+        return "";
     }
 
     @Override

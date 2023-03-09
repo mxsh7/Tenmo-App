@@ -8,6 +8,7 @@ public class Account {
     private int accountId;
     private int userId;
     private BigDecimal balance;
+    private String username;
 
 
     public int getAccountId() {
@@ -34,4 +35,11 @@ public class Account {
         this.balance = balance;
     }
 
-  }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+}

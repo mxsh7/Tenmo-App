@@ -32,6 +32,7 @@ public class App {
             mainMenu();
         }
     }
+
     private void loginMenu() {
         int menuSelection = -1;
         while (menuSelection != 0 && currentUser == null) {
@@ -62,8 +63,9 @@ public class App {
         UserCredentials credentials = consoleService.promptForCredentials();
         currentUser = authenticationService.login(credentials);
         if (currentUser == null) {
-             consoleService.printErrorMessage();
-        }accountService.setAuthToken(currentUser.getToken());
+            consoleService.printErrorMessage();
+        }
+        accountService.setAuthToken(currentUser.getToken());
     }
 
     private void mainMenu() {
@@ -90,12 +92,12 @@ public class App {
         }
     }
 
-	private void viewCurrentBalance() {
+    private void viewCurrentBalance() {
         System.out.println("======================================");
-        System.out.println("Your balance is: $"+accountService.getBalance());
-	}
+        System.out.println("Your balance is: $" + accountService.getBalance());
+    }
 
-	private void viewTransferHistory() {
+    private void viewTransferHistory() {
         Transfer[] transfers = accountService.getTransfers();
         System.out.println("-------------------------------------------");
         System.out.println("Transfers");
@@ -116,7 +118,7 @@ public class App {
         System.out.println("-------------------------------------------");
 
 
-	}
+    }
 
     private void viewPendingRequests() {
         Transfer[] transfers = accountService.getTransfers();
@@ -125,43 +127,56 @@ public class App {
         System.out.println("ID      To      Amount");
         for (int i = 0; i < transfers.length; i++) {
             Transfer transfer = transfers[i];
-            if(transfer.getType() == 1 && transfer.getStatus() == 1 && transfer.getFromUsername().equals(currentUser.getUser().getUsername())) {
+            if (transfer.getType() == 1 && transfer.getStatus() == 1 && transfer.getFromUsername().equals(currentUser.getUser().getUsername())) {
                 String type = "";
                 String otherAccountUsername = "";
 
-                    type = "To:  ";
-                    otherAccountUsername = transfer.getToUsername();
+                type = "To:  ";
+                otherAccountUsername = transfer.getToUsername();
                 System.out.println(transfer.getTransferId() + "    " + type + " " + otherAccountUsername + "   $" + transfer.getAmount());
             }
         }
         System.out.println("-------------------------------------------");
-		
-	}
+        // TODO Implement Improve / Reject
+    }
 
-	private void sendBucks() {
+    private void sendBucks() {
         Account[] accounts = accountService.getAllAccounts();
         System.out.println("-------------------------------------------");
         System.out.println("Users");
         System.out.println("ID      Name");
         for (int i = 0; i < accounts.length; i++) {
             Account account = accounts[i];
-            System.out.println(account.getUserId());
-        }
-        System.out.println("-------------------------------------------");
-        // TODO Include User Name In Account Object
-        int userId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel):  ");
-        int accountId = 0;
-        for (int i = 0; i < accounts.length; i++) {
-            Account account = accounts[i];
-            if (account.getUserId() == userId) {
-                accountId = account.getAccountId();
+            if (account.getUserId() != currentUser.getUser().getId()) {
+                System.out.println(account.getUserId() + "    " + account.getUsername());
             }
         }
-        System.out.println("$$$$$$$$$$$$$$$$$$$$");
-        BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter Amount:  ");
-        System.out.println("$$$$$$$$$$$$$$$$$$$$");
-        accountService.sendBucks(currentUser.getUser().getUsername(), accountId, amountToSend);
-	}
+        System.out.println("-------------------------------------------");
+
+        int accountId = -1;
+        int userId;
+
+        userId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel):  ");
+
+        if (userId != 0) {
+            for (int i = 0; i < accounts.length; i++) {
+                Account account = accounts[i];
+                if (account.getUserId() == userId && account.getUserId() != currentUser.getUser().getId()) {
+                    accountId = account.getAccountId();
+                }
+            }
+            if (accountId != -1) {
+                System.out.println("$$$$$$$$$$$$$$$$$$$$");
+                BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter Amount:  ");
+                System.out.println("$$$$$$$$$$$$$$$$$$$$");
+                accountService.sendBucks(currentUser.getUser().getUsername(), accountId, amountToSend);
+            } else {
+                System.out.println("You entered an invalid User Id.");
+            }
+        }
+
+
+    }
 
     /*
     -------------------------------------------
@@ -174,9 +189,9 @@ public class App {
 
      */
 
-	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
-	}
+    private void requestBucks() {
+        // TODO Auto-generated method stub
+
+    }
 
 }

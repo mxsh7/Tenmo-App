@@ -67,13 +67,9 @@ public class AccountService {
 
         BigDecimal balance = getBalance();
         int res =(balance.compareTo(amountToSend));
-        String str1 = "Both values are equal ";
-        String str2 = "Balance Value is greater ";
-        String str3 = "Amount to send value is greater";
+
 
         if( res == 0 || res == 1  ) {
-            // Create transfer object
-            // Post request to server
             Transfer transfer = new Transfer();
             transfer.setAmount(amountToSend);
             transfer.setFromUsername(currentUsername);
@@ -83,7 +79,7 @@ public class AccountService {
             HttpEntity<Transfer> entity = makeTransferEntity(transfer);
 
             try {
-                restTemplate.postForObject(API_BASE_URL + "myaccount/transfers", entity, Transfer.class);
+                restTemplate.postForObject(API_BASE_URL + "myaccount/transfers/send", entity, Transfer.class);
             } catch (RestClientResponseException | ResourceAccessException e) {
                 BasicLogger.log(e.getMessage());
             }

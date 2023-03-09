@@ -17,10 +17,14 @@ public interface AccountDao {
 
     public Account getCurrentUserAccount(Principal principal);
 
+    public String getAccountUsername(int accountId);
+
     public List<Transfer> getTransfers(Account account);
 
     public boolean createTransfer(Transfer transfer);
 
     public boolean updateAccount(Account account);
+
+
 
 }
