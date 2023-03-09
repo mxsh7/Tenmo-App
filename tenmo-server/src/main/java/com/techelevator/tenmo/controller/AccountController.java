@@ -40,12 +40,15 @@ public class AccountController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/myaccount/transfers", method = RequestMethod.POST)
-    public Transfer createTransfer(@Valid @RequestBody Transfer transfer) {
+    public void createTransfer(@Valid @RequestBody Transfer transfer, Principal principal) {
 
+        Account userAccount = dao.getCurrentUserAccount(principal);
 
-
-        return dao.createTransfer(transfer.getType(), transfer.getStatus(), transfer.getFromAccount(), transfer.getToAccount(), transfer.getAmount());
-
+        transfer.setStatus(2);
+        transfer.setFromAccount(userAccount.getAccountId());
+        // TODO Validate transfer
+        dao.createTransfer(transfer);
+        // TODO Update Balances
     }
 
 

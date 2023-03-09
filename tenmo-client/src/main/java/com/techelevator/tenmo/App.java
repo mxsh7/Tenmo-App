@@ -125,7 +125,7 @@ public class App {
         System.out.println("ID      To      Amount");
         for (int i = 0; i < transfers.length; i++) {
             Transfer transfer = transfers[i];
-            if(transfer.getStatus() == 1) {
+            if(transfer.getType() == 1 && transfer.getStatus() == 1 && transfer.getFromUsername().equals(currentUser.getUser().getUsername())) {
                 String type = "";
                 String otherAccountUsername = "";
 
@@ -140,12 +140,37 @@ public class App {
 
 	private void sendBucks() {
         Account[] accounts = accountService.getAllAccounts();
-        System.out.println(accounts);
+        System.out.println("-------------------------------------------");
+        System.out.println("Users");
+        System.out.println("ID      Name");
+        for (int i = 0; i < accounts.length; i++) {
+            Account account = accounts[i];
+            System.out.println(account.getUserId());
+        }
+        System.out.println("-------------------------------------------");
+        // TODO Include User Name In Account Object
         int userId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel)");
+        int accountId = 0;
+        for (int i = 0; i < accounts.length; i++) {
+            Account account = accounts[i];
+            if (account.getUserId() == userId) {
+                accountId = account.getAccountId();
+            }
+        }
         BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter Amount");
-
-		
+        accountService.sendBucks(currentUser.getUser().getUsername(), accountId, amountToSend);
 	}
+
+    /*
+    -------------------------------------------
+    Users
+    ID Name
+    -------------------------------------------
+    313 Bernice
+    54 Larry
+    ---------
+
+     */
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub

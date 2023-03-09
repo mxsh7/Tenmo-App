@@ -111,21 +111,21 @@ public class JdbcAccountDao implements AccountDao {
 
 
     @Override
-    public Transfer createTransfer(int transferTypeId, int transferStatusId, int accountFrom, int accountTo, BigDecimal amount ) {
+//    public Transfer create(Transfer transfer) {
+//        transfer.setTransferId(getMaxIdPlusOne());
+//        auctions.add(auction);
+//        return transfer;
+//    }
+    public void createTransfer(Transfer transfer) {
 
         String sql = "INSERT INTO public.transfer(\n" +
                 "\ttransfer_type_id, transfer_status_id, account_from, account_to, amount)\n" +
                 "\tVALUES (?, ?, ?, ?, ?) RETURNING transfer_id;";
-        Integer newTransferId = jdbcTemplate.queryForObject(sql, Integer.class, transferTypeId, transferStatusId, accountFrom, accountTo, amount);
-        Transfer transfer = new Transfer();
-        transfer.setTransferId(newTransferId);
-        transfer.setStatus(transferStatusId);
-        transfer.setType(transferStatusId);
-        transfer.setFromAccount(accountFrom);
-        transfer.setToAccount(accountTo);
-        transfer.setAmount(amount);
-        return transfer;
+        jdbcTemplate.queryForObject(sql, Integer.class, transfer.getType(), transfer.getStatus(),
+                transfer.getFromAccount(), transfer.getToAccount(), transfer.getAmount());
     }
+
+
 
     private Account mapAccount(SqlRowSet results){
         Account account = new Account();
@@ -143,7 +143,7 @@ public class JdbcAccountDao implements AccountDao {
         transfer.setFromAccount(results.getInt("account_from"));
         transfer.setToAccount(results.getInt("account_to"));
         transfer.setAmount(results.getBigDecimal("amount"));
-        transfer.setFromUsername(results.getString("from_usrname"));
+        transfer.setFromUsername(results.getString("from_username"));
         transfer.setToUsername(results.getString("to_username"));
         return transfer;
     }

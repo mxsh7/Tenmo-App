@@ -19,6 +19,6 @@ public interface AccountDao {
 
     public List<Transfer> getTransfers(Account account);
 
-    public Transfer createTransfer(int transferTypeId, int transferStatusId, int accountFrom, int accountTo, BigDecimal amount);
+    public void createTransfer(Transfer transfer);
 
 }
