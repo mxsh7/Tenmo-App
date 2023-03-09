@@ -91,9 +91,14 @@ public class JdbcAccountDao implements AccountDao {
     @Override
     public List<Transfer> getTransfers(Account account) {
         List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount\n" +
-                "\tFROM public.transfer\n" +
-                "\tWHERE account_from = ? OR account_to = ?;";
+        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to,\n" +
+                "amount, from_user.username AS from_username, to_user.username AS to_username\n" +
+                "FROM public.transfer\n" +
+                "LEFT JOIN account AS from_account ON transfer.account_from = from_account.account_id\n" +
+                "JOIN tenmo_user AS from_user ON from_account.user_id = from_user.user_id\n" +
+                "LEFT JOIN account AS to_account ON transfer.account_to = to_account.account_id\n" +
+                "JOIN tenmo_user AS to_user ON to_account.user_id = to_user.user_id\n" +
+                "WHERE  account_from= ? OR account_to = ?;";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, account.getAccountId(), account.getAccountId());
         while(results.next()) {
@@ -138,6 +143,8 @@ public class JdbcAccountDao implements AccountDao {
         transfer.setFromAccount(results.getInt("account_from"));
         transfer.setToAccount(results.getInt("account_to"));
         transfer.setAmount(results.getBigDecimal("amount"));
+        transfer.setFromUsername(results.getString("from_usrname"));
+        transfer.setToUsername(results.getString("to_username"));
         return transfer;
     }
 }

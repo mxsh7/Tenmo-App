@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +12,8 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountService {
 
@@ -35,6 +38,18 @@ public class AccountService {
             BasicLogger.log(e.getMessage());
         }
         return account.getBalance();
+    }
+
+    public Transfer[] getTransfers() {
+        Transfer[] transfers = null;
+        try{
+            ResponseEntity<Transfer[]> response =
+                    restTemplate.exchange(API_BASE_URL + "myaccount/transfers", HttpMethod.GET, makeAuthEntity(), Transfer[].class);
+            transfers = response.getBody();
+        } catch (RestClientResponseException | ResourceAccessException | NullPointerException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return transfers;
     }
 
 
