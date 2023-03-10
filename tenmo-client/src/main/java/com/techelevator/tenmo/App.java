@@ -116,7 +116,31 @@ public class App {
             System.out.println(transfer.getTransferId() + "    " + type + " " + otherAccountUsername + "   $" + transfer.getAmount());
         }
         System.out.println("-------------------------------------------");
+        int transferId = -1;
 
+
+        transferId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel):  ");
+
+        if (transferId != 0) {
+            for (int i = 0; i < transfers.length; i++) {
+                Transfer transferType = transfers[i];
+                if (transferType.getTransferId() == transferId) {
+                    transferId = transferType.getTransferId();
+                    System.out.println("-------------------------------------------");
+                    System.out.println("Transfers Details");
+                    System.out.println("-------------------------------------------");
+                    System.out.println("Id: " + transferType.getTransferId());
+                    System.out.println("From: " + transferType.getFromUsername());
+                    System.out.println("To: " + transferType.getToUsername());
+                    System.out.println("Type: " + transferType.getTypeDesc());
+                    System.out.println("Status: " + transferType.getStatusDescription());
+                    System.out.println("Amount: " + transferType.getAmount());
+
+
+                }
+            }
+
+        }
 
     }
 
@@ -137,7 +161,7 @@ public class App {
             }
         }
         System.out.println("-------------------------------------------");
-        // TODO Implement Improve / Reject
+        // TODO Implement Approve / Reject
     }
 
     private void sendBucks() {
@@ -169,6 +193,7 @@ public class App {
                 System.out.println("$$$$$$$$$$$$$$$$$$$$");
                 BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter Amount:  ");
                 System.out.println("$$$$$$$$$$$$$$$$$$$$");
+                System.out.println();
                 accountService.sendBucks(currentUser.getUser().getUsername(), accountId, amountToSend);
             } else {
                 System.out.println("You entered an invalid User Id.");
@@ -178,16 +203,6 @@ public class App {
 
     }
 
-    /*
-    -------------------------------------------
-    Users
-    ID Name
-    -------------------------------------------
-    313 Bernice
-    54 Larry
-    ---------
-
-     */
 
     private void requestBucks() {
         // TODO Auto-generated method stub

@@ -39,12 +39,29 @@ public class Transfer {
         return type;
     }
 
+    public String getTypeDesc(){
+        if(this.getType() == 1){
+            return "Request";
+        }else{
+            return"Send";
+        }
+    }
+
     public void setType(int type) {
         this.type = type;
     }
 
     public int getStatus() {
         return status;
+    }
+    public String getStatusDescription(){
+        if(this.getStatus() ==1){
+           return "Pending";
+        }else if(this.getStatus() == 2){
+            return "Approved";
+        }else{
+            return "Rejected";
+        }
     }
 
     public void setStatus(int status) {
@@ -82,4 +99,6 @@ public class Transfer {
     public void setToUsername(String toUsername) {
         this.toUsername = toUsername;
     }
+
+
 }

@@ -68,28 +68,30 @@ public class AccountService {
         BigDecimal balance = getBalance();
         int res =(balance.compareTo(amountToSend));
 
+        if(amountToSend.compareTo(BigDecimal.ZERO) >0) {
+            if (res == 0 || res == 1) {
+                Transfer transfer = new Transfer();
 
-        if( res == 0 || res == 1  ) {
-            Transfer transfer = new Transfer();
-            transfer.setAmount(amountToSend);
-            transfer.setFromUsername(currentUsername);
-            transfer.setToAccount(recipientAccountId);
-            transfer.setType(2);
+                transfer.setAmount(amountToSend);
+                transfer.setFromUsername(currentUsername);
+                transfer.setToAccount(recipientAccountId);
+                transfer.setType(2);
 
-            HttpEntity<Transfer> entity = makeTransferEntity(transfer);
+                HttpEntity<Transfer> entity = makeTransferEntity(transfer);
 
-            try {
-                restTemplate.postForObject(API_BASE_URL + "myaccount/transfers/send", entity, Transfer.class);
-            } catch (RestClientResponseException | ResourceAccessException e) {
-                BasicLogger.log(e.getMessage());
+                try {
+                    restTemplate.postForObject(API_BASE_URL + "myaccount/transfers/send", entity, Transfer.class);
+                } catch (RestClientResponseException | ResourceAccessException e) {
+                    BasicLogger.log(e.getMessage());
+                }
+
+                System.out.println("transfer is successful");
+            } else {
+                System.out.println("Insufficient balance");
             }
-
-            System.out.println("transfer is successful");
+        }else{
+            System.out.println("Transfer cannot be negative!!!");
         }
-        else {
-            System.out.println( "Insufficient balance" );
-        }
-
 
     }
 
