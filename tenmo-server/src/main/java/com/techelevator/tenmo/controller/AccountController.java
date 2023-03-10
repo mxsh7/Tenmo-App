@@ -7,8 +7,10 @@ import com.techelevator.tenmo.model.Transfer;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/myaccount/transfers", method = RequestMethod.POST)
     public void createTransfer(@Valid @RequestBody Transfer transfer, Principal principal) {
-            boolean completeTransfer = false;
+        boolean createTransferSuccessful;
         Account userAccount = dao.getCurrentUserAccount(principal);
 
         if (transfer.getType() == 1) {
@@ -52,18 +54,26 @@ public class AccountController {
             transfer.setToAccount(transfer.getToAccount());
         }
 
-        // TODO Validate transfer
-        // TODO Check for insufficient balance
-        completeTransfer = dao.createTransfer(transfer);
-        if(completeTransfer == true && transfer.getType() == 2){
-            Account otherAccount = dao.getAccountByAccountId(transfer.getToAccount());
-            userAccount.setBalance(userAccount.getBalance().subtract(transfer.getAmount()));
-            // TODO Check That Update Worked
-            dao.updateAccount(userAccount);
-            otherAccount.setBalance(otherAccount.getBalance().add(transfer.getAmount()));
-            dao.updateAccount(otherAccount);
-        }
+        createTransferSuccessful = dao.createTransfer(transfer);
+        if(createTransferSuccessful == true && transfer.getType() == 2){
+            int balanceResult = userAccount.getBalance().compareTo(transfer.getAmount());
+            int amountResult = transfer.getAmount().compareTo(BigDecimal.ZERO);
 
+            if (balanceResult == -1) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance.");
+            } else if (amountResult >= 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer amount cannot be negative.");
+            } else {
+                Account otherAccount = dao.getAccountByAccountId(transfer.getToAccount());
+                userAccount.setBalance(userAccount.getBalance().subtract(transfer.getAmount()));
+                boolean updateSuccessful = dao.updateAccount(userAccount);
+                otherAccount.setBalance(otherAccount.getBalance().add(transfer.getAmount()));
+                updateSuccessful = updateSuccessful && dao.updateAccount(otherAccount);
+                if (!updateSuccessful) {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while processing transfer.");
+                }
+            }
+        }
     }
 
     @RequestMapping(path = "/myaccount/transfers", method = RequestMethod.PUT)
@@ -75,9 +85,12 @@ public class AccountController {
         if(completeTransfer == true && transfer.getStatus() == 2){
             userAccount.setBalance(userAccount.getBalance().subtract(transfer.getAmount()));
             // TODO Check That Update Worked
-            dao.updateAccount(userAccount);
+            boolean updateSuccessful = dao.updateAccount(userAccount);
             transferReceiver.setBalance(transferReceiver.getBalance().add(transfer.getAmount()));
-            dao.updateAccount(transferReceiver);
+            updateSuccessful = updateSuccessful && dao.updateAccount(transferReceiver);
+            if (!updateSuccessful) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while processing transfer.");
+            }
         }
     }
 

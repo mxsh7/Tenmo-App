@@ -3,12 +3,14 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
+import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,8 +204,12 @@ public class JdbcAccountDao implements AccountDao {
         transfer.setFromAccount(results.getInt("account_from"));
         transfer.setToAccount(results.getInt("account_to"));
         transfer.setAmount(results.getBigDecimal("amount"));
-        transfer.setFromUsername(results.getString("from_username"));
-        transfer.setToUsername(results.getString("to_username"));
+        try {
+            transfer.setFromUsername(results.getString("from_username"));
+            transfer.setToUsername(results.getString("to_username"));
+        } catch (InvalidResultSetAccessException e) {
+
+        }
         return transfer;
     }
 }

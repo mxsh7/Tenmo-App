@@ -258,7 +258,11 @@ public class App {
                 BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter Amount:  ");
                 System.out.println("$$$$$$$$$$$$$$$$$$$$");
                 System.out.println();
-                accountService.requestBucks(currentUser.getUser().getUsername(), accountId, amountToSend);
+                if (amountToSend.compareTo(BigDecimal.ZERO) < 0) {
+                    System.out.println("Transfer cannot be negative!!!");
+                } else {
+                    accountService.requestBucks(currentUser.getUser().getUsername(), accountId, amountToSend);
+                }
             } else {
                 System.out.println("You entered an invalid User Id.");
             }

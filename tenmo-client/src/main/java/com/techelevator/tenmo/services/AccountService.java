@@ -80,13 +80,18 @@ public class AccountService {
 
                 HttpEntity<Transfer> entity = makeTransferEntity(transfer);
 
+                boolean success = false;
                 try {
                     restTemplate.postForObject(API_BASE_URL + "myaccount/transfers", entity, Transfer.class);
+                    success = true;
                 } catch (RestClientResponseException | ResourceAccessException e) {
                     BasicLogger.log(e.getMessage());
+                    System.out.println("The server could not complete the request. See log for details.");
                 }
 
-                System.out.println("transfer is successful");
+                if (success) {
+                    System.out.println("Transfer is successful");
+                }
             } else {
                 System.out.println("Insufficient balance");
             }
@@ -101,7 +106,6 @@ public class AccountService {
         BigDecimal balance = getBalance();
         int res =(balance.compareTo(amountToRequest));
 
-
         if (res == 0 || res == 1) {
             Transfer transfer = new Transfer();
 
@@ -113,13 +117,18 @@ public class AccountService {
 
             HttpEntity<Transfer> entity = makeTransferEntity(transfer);
 
+            boolean success = false;
             try {
                 restTemplate.postForObject(API_BASE_URL + "myaccount/transfers", entity, Transfer.class);
+                success = true;
             } catch (RestClientResponseException | ResourceAccessException e) {
                 BasicLogger.log(e.getMessage());
+                System.out.println("The server could not complete the request. See log for details.");
             }
 
-            System.out.println("transfer is successful");
+            if (success) {
+                System.out.println("Transfer is successful");
+            }
         } else {
             System.out.println("Insufficient balance");
         }
@@ -145,14 +154,6 @@ public class AccountService {
         }
     }
 
-
-        // while balance > 0
-        // senders amount to send = 0
-        // then sender balance = balance - amount
-        //receivers balance = balance + amount
-
-//
-//    }
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
