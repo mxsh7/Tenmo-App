@@ -124,19 +124,38 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public boolean createTransfer(Transfer transfer) {
-        boolean completeTransfer = false;
+        boolean success = false;
         try {
             String sql = "INSERT INTO public.transfer(\n" +
                     "\ttransfer_type_id, transfer_status_id, account_from, account_to, amount)\n" +
                     "\tVALUES (?, ?, ?, ?, ?) RETURNING transfer_id;";
              jdbcTemplate.queryForObject(sql, Integer.class, transfer.getType(), transfer.getStatus(),
                     transfer.getFromAccount(), transfer.getToAccount(), transfer.getAmount());
-             completeTransfer = true;
+             success = true;
         }catch (Exception e){
-
-        }return completeTransfer;
+            System.out.println(e.getMessage());
+        }
+        return success;
 
     }
+
+
+    @Override
+    public boolean updateTransfer(Transfer transfer) {
+        boolean success = false;
+        try {
+            String sql = "UPDATE public.transfer\n" +
+                    "\tSET transfer_id=?, transfer_type_id=?, transfer_status_id=?, account_from=?, account_to=?, amount=?\n" +
+                    "\tWHERE transfer_id=?;";
+            jdbcTemplate.update(sql, transfer.getTransferId(), transfer.getType(), transfer.getStatus(), transfer.getFromAccount(),
+                    transfer.getToAccount(), transfer.getAmount(), transfer.getTransferId());
+            success = true;
+        } catch (Exception e) {
+
+        }
+        return success;
+    }
+
 
     @Override
     public boolean updateAccount(Account account){

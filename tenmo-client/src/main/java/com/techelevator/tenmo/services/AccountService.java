@@ -76,11 +76,12 @@ public class AccountService {
                 transfer.setFromUsername(currentUsername);
                 transfer.setToAccount(recipientAccountId);
                 transfer.setType(2);
+                transfer.setStatus(2);
 
                 HttpEntity<Transfer> entity = makeTransferEntity(transfer);
 
                 try {
-                    restTemplate.postForObject(API_BASE_URL + "myaccount/transfers/send", entity, Transfer.class);
+                    restTemplate.postForObject(API_BASE_URL + "myaccount/transfers", entity, Transfer.class);
                 } catch (RestClientResponseException | ResourceAccessException e) {
                     BasicLogger.log(e.getMessage());
                 }
@@ -95,6 +96,54 @@ public class AccountService {
 
     }
 
+    public void requestBucks(String currentUsername, int otherAccountId, BigDecimal amountToRequest){
+
+        BigDecimal balance = getBalance();
+        int res =(balance.compareTo(amountToRequest));
+
+
+        if (res == 0 || res == 1) {
+            Transfer transfer = new Transfer();
+
+            transfer.setAmount(amountToRequest);
+            transfer.setFromUsername(currentUsername);
+            transfer.setToAccount(otherAccountId);
+            transfer.setType(1);
+            transfer.setStatus(1);
+
+            HttpEntity<Transfer> entity = makeTransferEntity(transfer);
+
+            try {
+                restTemplate.postForObject(API_BASE_URL + "myaccount/transfers", entity, Transfer.class);
+            } catch (RestClientResponseException | ResourceAccessException e) {
+                BasicLogger.log(e.getMessage());
+            }
+
+            System.out.println("transfer is successful");
+        } else {
+            System.out.println("Insufficient balance");
+        }
+
+    }
+
+    public boolean updateTransfer( Transfer transfer ) {
+        BigDecimal balance = getBalance();
+        int res =(balance.compareTo(transfer.getAmount()));
+
+        if (transfer.getStatus() == 3 || res == 0 || res == 1) {
+            HttpEntity<Transfer> entity = makeTransferEntity(transfer);
+
+            try {
+                restTemplate.put(API_BASE_URL + "myaccount/transfers", entity, Transfer.class);
+            } catch (RestClientResponseException | ResourceAccessException e) {
+                BasicLogger.log(e.getMessage());
+            }
+            return true;
+        } else {
+            System.out.println("You don't have enough money to approve that transfer.");
+            return false;
+        }
+    }
 
 
         // while balance > 0

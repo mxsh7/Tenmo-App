@@ -39,26 +39,46 @@ public class AccountController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/myaccount/transfers/send", method = RequestMethod.POST)
+    @RequestMapping(path = "/myaccount/transfers", method = RequestMethod.POST)
     public void createTransfer(@Valid @RequestBody Transfer transfer, Principal principal) {
             boolean completeTransfer = false;
         Account userAccount = dao.getCurrentUserAccount(principal);
-        Account transferReceiver = dao.getAccountByAccountId(transfer.getToAccount());
 
-        transfer.setStatus(2);
-        transfer.setFromAccount(userAccount.getAccountId());
+        if (transfer.getType() == 1) {
+            transfer.setFromAccount(transfer.getToAccount());
+            transfer.setToAccount(userAccount.getAccountId());
+        } else {
+            transfer.setFromAccount(userAccount.getAccountId());
+            transfer.setToAccount(transfer.getToAccount());
+        }
 
         // TODO Validate transfer
         // TODO Check for insufficient balance
         completeTransfer = dao.createTransfer(transfer);
-        if(completeTransfer == true){
+        if(completeTransfer == true && transfer.getType() == 2){
+            Account otherAccount = dao.getAccountByAccountId(transfer.getToAccount());
+            userAccount.setBalance(userAccount.getBalance().subtract(transfer.getAmount()));
+            // TODO Check That Update Worked
+            dao.updateAccount(userAccount);
+            otherAccount.setBalance(otherAccount.getBalance().add(transfer.getAmount()));
+            dao.updateAccount(otherAccount);
+        }
+
+    }
+
+    @RequestMapping(path = "/myaccount/transfers", method = RequestMethod.PUT)
+    public void updateTransfer(@Valid @RequestBody Transfer transfer, Principal principal) {
+        Account userAccount = dao.getCurrentUserAccount(principal);
+        Account transferReceiver = dao.getAccountByAccountId(transfer.getToAccount());
+
+       boolean completeTransfer = dao.updateTransfer(transfer);
+        if(completeTransfer == true && transfer.getStatus() == 2){
             userAccount.setBalance(userAccount.getBalance().subtract(transfer.getAmount()));
             // TODO Check That Update Worked
             dao.updateAccount(userAccount);
             transferReceiver.setBalance(transferReceiver.getBalance().add(transfer.getAmount()));
             dao.updateAccount(transferReceiver);
         }
-
     }
 
 

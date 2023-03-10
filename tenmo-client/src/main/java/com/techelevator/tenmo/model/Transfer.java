@@ -3,6 +3,14 @@ package com.techelevator.tenmo.model;
 import java.math.BigDecimal;
 
 public class Transfer {
+
+    final static int REQUEST = 1;
+    final static int SEND = 2;
+
+    final static int PENDING = 1;
+    final static int APPROVED = 2;
+    final static int REJECTED = 3;
+
     private int transferId;
     private BigDecimal amount;
     private int type;
@@ -11,13 +19,6 @@ public class Transfer {
     private int toAccount;
     private String fromUsername;
     private String toUsername;
-
-    final static int REQUEST = 1;
-    final static int SEND = 2;
-
-    final static int PENDING = 1;
-    final static int APPROVED = 2;
-    final static int REJECTED = 3;
 
     public int getTransferId() {
         return transferId;
@@ -39,33 +40,34 @@ public class Transfer {
         return type;
     }
 
-    public String getTypeDesc(){
-        if(this.getType() == 1){
-            return "Request";
-        }else{
-            return"Send";
-        }
-    }
-
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getTypeDesc() {
+        if (this.getType() == 1) {
+            return "Request";
+        } else {
+            return "Send";
+        }
     }
 
     public int getStatus() {
         return status;
     }
-    public String getStatusDescription(){
-        if(this.getStatus() ==1){
-           return "Pending";
-        }else if(this.getStatus() == 2){
-            return "Approved";
-        }else{
-            return "Rejected";
-        }
-    }
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getStatusDesc() {
+        if (this.getStatus() == 1) {
+            return "Pending";
+        } else if (this.getStatus() == 2) {
+            return "Approved";
+        } else {
+            return "Rejected";
+        }
     }
 
     public int getFromAccount() {

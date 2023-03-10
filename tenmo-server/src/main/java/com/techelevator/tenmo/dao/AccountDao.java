@@ -23,6 +23,8 @@ public interface AccountDao {
 
     public boolean createTransfer(Transfer transfer);
 
+    public boolean updateTransfer(Transfer transfer);
+
     public boolean updateAccount(Account account);
 
 
