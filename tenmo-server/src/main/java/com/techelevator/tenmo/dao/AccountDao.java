@@ -27,6 +27,8 @@ public interface AccountDao {
 
     public boolean updateAccount(Account account);
 
+    public Transfer getTransferById(int transferId);
+
 
 
 }

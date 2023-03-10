@@ -22,6 +22,21 @@ public class Transfer {
     final static int APPROVED = 2;
     final static int REJECTED = 3;
 
+    public Transfer(int transferId, BigDecimal amount, int type, int status, int fromAccount, int toAccount, String fromUsername, String toUsername) {
+        this.transferId = transferId;
+        this.amount = amount;
+        this.type = type;
+        this.status = status;
+        this.fromAccount = fromAccount;
+        this.toAccount = toAccount;
+        this.fromUsername = fromUsername;
+        this.toUsername = toUsername;
+    }
+
+    public Transfer() {
+
+    }
+
     public int getTransferId() {
         return transferId;
     }

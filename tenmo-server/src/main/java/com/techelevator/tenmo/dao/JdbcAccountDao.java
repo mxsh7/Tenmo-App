@@ -120,6 +120,19 @@ public class JdbcAccountDao implements AccountDao {
 
         return transfers;
     }
+    @Override
+    public Transfer getTransferById(int transferId) {
+        Transfer transfer = null;
+        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount\n" +
+                "\tFROM public.transfer\n" +
+                "\tWHERE transfer_id=?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
+        if (results.next()) {
+            transfer = mapTransfer(results);
+
+        }
+        return transfer;
+    }
 
 
     @Override

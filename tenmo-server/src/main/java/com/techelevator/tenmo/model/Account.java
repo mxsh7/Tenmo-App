@@ -14,6 +14,17 @@ public class Account {
     private BigDecimal balance;
     private String username;
 
+    public Account(int accountId, int userId, BigDecimal balance, String username) {
+        this.accountId = accountId;
+        this.userId = userId;
+        this.balance = balance;
+        this.username = username;
+    }
+
+    public Account() {
+
+    }
+
     public int getAccountId() {
         return accountId;
     }

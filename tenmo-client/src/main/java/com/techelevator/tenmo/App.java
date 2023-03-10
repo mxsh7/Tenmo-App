@@ -64,9 +64,10 @@ public class App {
         currentUser = authenticationService.login(credentials);
         if (currentUser == null) {
             consoleService.printErrorMessage();
-            // TODO Handle Wrong Password
+           }else{
+            accountService.setAuthToken(currentUser.getToken());
         }
-        accountService.setAuthToken(currentUser.getToken());
+
     }
 
     private void mainMenu() {

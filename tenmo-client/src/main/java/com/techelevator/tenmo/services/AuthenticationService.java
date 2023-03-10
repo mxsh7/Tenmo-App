@@ -29,8 +29,14 @@ public class AuthenticationService {
             ResponseEntity<AuthenticatedUser> response =
                     restTemplate.exchange(baseUrl + "login", HttpMethod.POST, entity, AuthenticatedUser.class);
             user = response.getBody();
-        } catch (RestClientResponseException | ResourceAccessException e) {
+        } catch (ResourceAccessException e ) {
+            System.out.println();
+            System.out.println("!!!!!!!!!!!!!!!!!!!");
+            System.out.println("System is offline!");
+            System.out.println();
             BasicLogger.log(e.getMessage());
+        }catch (NullPointerException | RestClientResponseException ex){
+            System.out.println("Please enter the correct username/password");
         }
         return user;
     }
