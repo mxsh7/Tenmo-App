@@ -103,7 +103,7 @@ public class App {
         Transfer[] transfers = accountService.getTransfers();
         System.out.println("-------------------------------------------");
         System.out.println("Transfers");
-        System.out.println("ID      From/To      Amount");
+        System.out.println("ID      From/To" + "         \tAmount" + "      \tTransfer Status");
         for (int i = 0; i < transfers.length; i++) {
             Transfer transfer = transfers[i];
             String type = "";
@@ -115,7 +115,7 @@ public class App {
                 type = "From:";
                 otherAccountUsername = transfer.getFromUsername();
             }
-            System.out.println(transfer.getTransferId() + "    " + type + " " + otherAccountUsername + "   $" + transfer.getAmount());
+            System.out.println(transfer.getTransferId() + "\t" + type + " \t" + otherAccountUsername + "        $" + transfer.getAmount() + "      \t" + transfer.getStatusDesc());
         }
         System.out.println("-------------------------------------------");
         int transferId = -1;

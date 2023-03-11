@@ -26,7 +26,12 @@ public class AccountController {
 
     @RequestMapping(path = "/account", method = RequestMethod.GET)
     public List<Account> listAccounts() {
-        return dao.getAllAccounts();
+
+        List<Account> accounts = dao.getAllAccounts();
+        for (int i = 0; i < accounts.size(); i++) {
+            accounts.get(i).setBalance(BigDecimal.ZERO);
+
+        }return accounts;
     }
 
     @RequestMapping(path = "/myaccount", method = RequestMethod.GET)
@@ -61,7 +66,7 @@ public class AccountController {
 
             if (balanceResult == -1) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance.");
-            } else if (amountResult >= 0) {
+            } else if (amountResult <= 0) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer amount cannot be negative.");
             } else {
                 Account otherAccount = dao.getAccountByAccountId(transfer.getToAccount());
@@ -84,7 +89,7 @@ public class AccountController {
        boolean completeTransfer = dao.updateTransfer(transfer);
         if(completeTransfer == true && transfer.getStatus() == 2){
             userAccount.setBalance(userAccount.getBalance().subtract(transfer.getAmount()));
-            // TODO Check That Update Worked
+
             boolean updateSuccessful = dao.updateAccount(userAccount);
             transferReceiver.setBalance(transferReceiver.getBalance().add(transfer.getAmount()));
             updateSuccessful = updateSuccessful && dao.updateAccount(transferReceiver);

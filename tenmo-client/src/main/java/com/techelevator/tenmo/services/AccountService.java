@@ -103,10 +103,10 @@ public class AccountService {
 
     public void requestBucks(String currentUsername, int otherAccountId, BigDecimal amountToRequest){
 
-        BigDecimal balance = getBalance();
-        int res =(balance.compareTo(amountToRequest));
 
-        if (res == 0 || res == 1) {
+
+
+
             Transfer transfer = new Transfer();
 
             transfer.setAmount(amountToRequest);
@@ -127,11 +127,8 @@ public class AccountService {
             }
 
             if (success) {
-                System.out.println("Transfer is successful");
+                System.out.println("Transfer is pending approval");
             }
-        } else {
-            System.out.println("Insufficient balance");
-        }
 
     }
 
@@ -149,7 +146,9 @@ public class AccountService {
             }
             return true;
         } else {
+            System.out.println("!!!!!");
             System.out.println("You don't have enough money to approve that transfer.");
+            System.out.println();
             return false;
         }
     }
