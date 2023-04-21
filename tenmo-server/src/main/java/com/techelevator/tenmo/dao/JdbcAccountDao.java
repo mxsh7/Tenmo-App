@@ -166,7 +166,7 @@ public class JdbcAccountDao implements AccountDao {
                     transfer.getToAccount(), transfer.getAmount(), transfer.getTransferId());
             success = true;
         } catch (Exception e) {
-
+//            System.out.println(e);
         }
         return success;
     }
